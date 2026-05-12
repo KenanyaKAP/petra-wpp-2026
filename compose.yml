@@ -1,0 +1,30 @@
+services:
+  backend:
+    image: kennyap/kenny-wpp-2026-be:latest
+    ports:
+      - "${BACKEND_PORT:-3180}:${BACKEND_PORT:-3180}"
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
+    restart: unless-stopped
+
+  frontend-invitation:
+    image: kennyap/kenny-wpp-2026-fe-i
+    ports:
+      - "${INVITATION_PORT:-3100}:3100"
+    environment:
+      - API_URL=${VITE_API_URL}
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  frontend-admin:
+    image: kennyap/kenny-wpp-2026-fe-a
+    ports:
+      - "${ADMIN_PORT:-3101}:3101"
+    environment:
+      - API_URL=${VITE_API_URL}
+    depends_on:
+      - backend
+    restart: unless-stopped
